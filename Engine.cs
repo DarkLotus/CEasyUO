@@ -34,6 +34,7 @@ namespace Assistant
         public static string RootPath => _rootPath ?? ( _rootPath = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ) );
         public static string UOFilePath { get; internal set; }
         public static bool IsInstalled { get; internal set; }
+        public static CEasyUOMainForm m_MainForm;
 
         public static unsafe void Install( PluginHeader* header )
         {
@@ -49,20 +50,21 @@ namespace Assistant
                 UOFilePath = Marshal.GetDelegateForFunctionPointer<OnGetUOFilePath>( header->GetUOFilePath )();
                 Ultima.Files.SetMulPath( UOFilePath );
                 Ultima.Multis.PostHSFormat = UsePostHSChanges;
-                Thread t = new Thread( () =>
-                {
-                    Thread.CurrentThread.Name = "EasyUO Main Thread";
+               // Thread t = new Thread( () =>
+               // {
+                    //Thread.CurrentThread.Name = "EasyUO Main Thread";
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault( false );
-                    Application.Run( new CEasyUOMainForm() );
-                } );
-                 t.SetApartmentState( ApartmentState.STA );
+                m_MainForm=  new CEasyUOMainForm() ;
+                m_MainForm.Show();
+              //  } );
+              //   t.SetApartmentState( ApartmentState.STA );
                 PacketHandlers.Initialize();
                // Targeting.Initialize();
                 Spell.Initialize(); EUOVars.Initialize();
-                t.IsBackground = true;
+               // t.IsBackground = true;
 
-                t.Start();
+              //  t.Start();
                 IsInstalled = true;
             }
             catch (Exception e)

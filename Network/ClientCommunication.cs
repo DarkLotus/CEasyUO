@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Assistant
 {
@@ -29,6 +30,8 @@ namespace Assistant
         private static OnFocusGained _onFocusGained;
         private static OnFocusLost _onFocusLost;
 
+        private static OnTick _onTick;
+
         internal static bool InstallHooks( PluginHeader* header )
         {
             _sendToClient = Marshal.GetDelegateForFunctionPointer<OnPacketSendRecv>( header->Recv );
@@ -37,9 +40,8 @@ namespace Assistant
             _getPlayerPosition = Marshal.GetDelegateForFunctionPointer<OnGetPlayerPosition>( header->GetPlayerPosition );
             _castSpell = Marshal.GetDelegateForFunctionPointer<OnCastSpell>( header->CastSpell );
             _getStaticImage = Marshal.GetDelegateForFunctionPointer<OnGetStaticImage>( header->GetStaticImage );
-
             ClientWindow = header->HWND;
-
+            _onTick = Tick;
             _recv = OnRecv;
             _send = OnSend;
             _onHotkeyPressed = OnHotKeyHandler;
@@ -61,10 +63,16 @@ namespace Assistant
             header->OnInitialize = Marshal.GetFunctionPointerForDelegate( _onInitialize );
             header->OnConnected = Marshal.GetFunctionPointerForDelegate( _onConnected );
             header->OnDisconnected = Marshal.GetFunctionPointerForDelegate( _onDisconnected );
-           // header->OnFocusGained = Marshal.GetFunctionPointerForDelegate( _onFocusGained );
-           // header->OnFocusLost = Marshal.GetFunctionPointerForDelegate( _onFocusLost );
+            // header->OnFocusGained = Marshal.GetFunctionPointerForDelegate( _onFocusGained );
+            // header->OnFocusLost = Marshal.GetFunctionPointerForDelegate( _onFocusLost );
+            header->Tick = Marshal.GetFunctionPointerForDelegate( _onTick );
 
             return true;
+        }
+
+        private static void Tick()
+        {
+            Application.DoEvents();
         }
 
         private static void OnClientClosing()
