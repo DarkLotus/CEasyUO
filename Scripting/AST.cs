@@ -172,7 +172,7 @@ namespace CEasyUO
         public override bool Execute()
         {
             var index = (int)Index.GetValue();
-            EUOInterpreter.Setvariable( "#journal", EUOInterpreter.GetJournal( index ) );
+            EUOInterpreter.Setvariable( "#journal", World.Player.GetJournal( index ) );
             return base.Execute();
         }
     }
@@ -192,6 +192,34 @@ namespace CEasyUO
         {
             Index = index;
 
+        }
+        public override bool Execute()
+        {
+            var val = Index.GetValue().ToString();
+            if ( val == "reset" )
+            {
+                World.Player.IgnoredItems.Clear();
+                World.Player.IgnoredTypes.Clear();
+
+            }
+            else if ( val.Contains( "_" ) )
+            {
+                var vals = val.Split( '_' );
+                foreach ( var v in vals )
+                    Add( v );
+            }
+            else
+                Add( val );
+            return base.Execute();
+        }
+
+
+        private void Add(string val )
+        {
+            if ( val.Length > 3 )
+                World.Player.IgnoredItems.Add( Utility.EUO2StealthID( val ) );
+            else
+                World.Player.IgnoredTypes.Add( Utility.EUO2StealthType( val ) );
         }
     }
     class MenuStmt : Stmt
@@ -636,6 +664,9 @@ namespace CEasyUO
                     break;
                 case Symbol.Concat:
                     return leftExpr.GetValue().ToString() + rightExpr.GetValue().ToString();
+                case Symbol.In:
+                    var val = leftExpr.GetValue().ToString().Replace('_',' ');
+                    return rightExpr.GetValue().ToString().Contains( val );
 
             }
          throw new NotSupportedException();   

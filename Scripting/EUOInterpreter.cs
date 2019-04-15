@@ -237,13 +237,7 @@ namespace CEasyUO
             return null;
         }
 
-        internal static string GetJournal( int index )
-        {
-            if ( Journal.Count > index )
-                return Journal[index];
-            return "X";
-        }
-
+       
        
 
       
@@ -555,11 +549,6 @@ namespace CEasyUO
 
                 }
 
-        private static List<string> Journal = new List<string>();
-
-        internal static void AddToJournal( string text )
-        {
-            Journal.Add( text );
-        }
+      
     }
 }

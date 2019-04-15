@@ -1493,7 +1493,7 @@ PlayerData.DoubleClick(ser, false);
         {
             if (World.Player == null)
                 return;
-            CEasyUO.EUOInterpreter.AddToJournal( text );
+            World.Player.AddToJournal( text );
             if (type == MessageType.Spell)
             {
                 Spell s = Spell.Get(text.Trim());
@@ -1533,93 +1533,15 @@ PlayerData.DoubleClick(ser, false);
                 if (m != null /*&& ( m.Name == null || m.Name == "" || m.Name == "(Not Seen)" )*/&& m.Name.IndexOf(text) != 5 && m != World.Player && !(text.StartsWith("(") && text.EndsWith(")")))
                     m.Name = text;
             }
-            /*else if ( Spell.Get( text.Trim() ) != null )
-            { // send fake spells to bottom left
-                 p.Seek( 3, SeekOrigin.Begin );
-                 p.Write( (uint)0xFFFFFFFF );
-            }*/
             else
             {
-                if (ser == Serial.MinusOne && name == "System")
-                {
-                    if (Config.GetBool("FilterSnoopMsg") && text.IndexOf(World.Player.Name) == -1 && text.StartsWith("You notice") && text.IndexOf("attempting to peek into") != -1 && text.IndexOf("belongings") != -1)
-                    {
-                        args.Block = true;
-                        return;
-                    }
-
-                    if (text.StartsWith("You've committed a criminal act") || text.StartsWith("You are now a criminal"))
-                    {
-                    }
-
-                    // Overhead message override
-                    if (Config.GetBool("ShowOverheadMessages") && OverheadMessages.OverheadMessageList.Count > 0)
-                    {
-                        string overheadFormat = Config.GetString("OverheadFormat");
-
-                        foreach (OverheadMessages.OverheadMessage message in OverheadMessages.OverheadMessageList)
-                        {
-                            if (text.IndexOf(message.SearchMessage, StringComparison.OrdinalIgnoreCase) != -1)
-                            {
-                                World.Player.OverheadMessage(overheadFormat.Replace("{msg}", message.MessageOverhead));
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (Config.GetBool("ShowContainerLabels") && ser.IsItem)
-                {
-                    Item item = World.FindItem(ser);
-                    
-                    if (item == null || !item.IsContainer)
-                        return;
-
-                    foreach (ContainerLabels.ContainerLabel label in ContainerLabels.ContainerLabelList)
-                    {
-                        // Check if its the serial match and if the text matches the name (since we override that for the label)
-                        if (Serial.Parse(label.Id) == ser && (item.DisplayName.Equals(text) || label.Alias.Equals(text, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            string labelDisplay = $"{Config.GetString("ContainerLabelFormat").Replace("{label}", label.Label).Replace("{type}", text)}";
-
-                            //ContainerLabelStyle
-                            if (Config.GetInt("ContainerLabelStyle") == 0)
-                            {
-                                ClientCommunication.SendToClient(new AsciiMessage(ser, item.ItemID.Value, MessageType.Label, label.Hue, 3, Language.CliLocName, labelDisplay));
-
-                            }
-                            else
-                            {
-                                ClientCommunication.SendToClient(new UnicodeMessage(ser, item.ItemID.Value, MessageType.Label, label.Hue, 3, Language.CliLocName, "", labelDisplay));
-                            }
-
-                            // block the actual message from coming through since we have it in the label
-                            args.Block = true;
-
-                            ContainerLabels.LastContainerLabelDisplayed = ser;
-
-                            break;
-                        }
-                    }
-                }
-
-                if ((type == MessageType.Emote || type == MessageType.Regular || type == MessageType.Whisper || type == MessageType.Yell) && ser.IsMobile && ser != World.Player.Serial)
-                {
-
-
-                    if (Config.GetBool("ForceSpeechHue"))
-                    {
-                        p.Seek(10, SeekOrigin.Begin);
-                        p.Write((ushort)Config.GetInt("SpeechHue"));
-                    }
-                }
-
-                if (!ser.IsValid || ser == World.Player.Serial || ser.IsItem)
+             
+                if (!ser.IsValid || ser == World.Player.Serial || ser.IsItem || ( type == MessageType.System ) || name == "System" )
                 {
                     SysMessages.Add(text);
-
-                    if (SysMessages.Count >= 25)
-                        SysMessages.RemoveRange(0, 10);
+                    lock(SysMessages)
+                        if (SysMessages.Count >= 25)
+                            SysMessages.RemoveRange(0, 10);
                 }
             }
             
@@ -1636,21 +1558,8 @@ PlayerData.DoubleClick(ser, false);
             string name = p.ReadStringSafe(30);
             string text = p.ReadStringSafe();
 
-            if (World.Player != null && serial == Serial.Zero && body == 0 && type == MessageType.Regular && hue == 0xFFFF && font == 0xFFFF && name == "SYSTEM")
-            {
-                args.Block = true;
+            HandleSpeech( p, args, serial, body, type, hue, font, "A", name, text );
 
-                p.Seek(3, SeekOrigin.Begin);
-                p.WriteAsciiFixed("", (int)p.Length - 3);
-            }
-            else
-            {
-                HandleSpeech(p, args, serial, body, type, hue, font, "A", name, text);
-
-
-
-
-            }
         }
 
         public static void UnicodeSpeech(Packet p, PacketHandlerEventArgs args)

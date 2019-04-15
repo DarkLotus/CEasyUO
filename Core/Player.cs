@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Assistant.Core;
 
 using Ultima;
+using System.Linq;
 
 namespace Assistant
 {
@@ -890,11 +891,33 @@ namespace Assistant
         public uint LastGumpY { get; internal set; }
         public int LastGumpWidth { get; internal set; }
         public int LastGumpHeight { get; internal set; }
-        public string LastSystemMessage { get; internal set; }
+        public string LastSystemMessage => PacketHandlers.SysMessages.Last();
+        private List<string> m_Journal = new List<string>();
         public uint LastContainerGumpGraphic { get; internal set; }
+        public List<uint> IgnoredItems = new List<uint>();
+        public List<ushort> IgnoredTypes = new List<ushort>();
 
         //private UOEntity m_LastCtxM = null;
         //public UOEntity LastContextMenu { get { return m_LastCtxM; } set { m_LastCtxM = value; } }
+
+        public void ClearJournal()
+        {
+            m_Journal.Clear();
+        }
+
+        public string GetJournal(int index)
+        {
+            if(m_Journal.Count > index)
+                return m_Journal[index];
+            return string.Empty;
+        }
+
+        public void AddToJournal(string msg )
+        {
+            m_Journal.Insert( 0, msg );
+            if ( m_Journal.Count > 500 )
+                m_Journal.RemoveAt( 500 );
+        }
 
         public static bool DoubleClick(object clicked)
         {
