@@ -42,9 +42,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\cuoapi.dll</HintPath>
     </Reference>
-    <Reference Include="EasyAntlr">
-      <HintPath>C:\Users\James\Documents\Visual Studio 2017\Projects\EasyLoA\EasyAntlr\bin\Debug\EasyAntlr.exe</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,10 +53,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Ultima, Version=4.3.3.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Ultima.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ActionQueue.cs" />
@@ -70,6 +63,40 @@
     <Compile Include="Scripting\Lexer.cs" />
     <Compile Include="Scripting\ParseException.cs" />
     <Compile Include="Scripting\SpracheParser.cs" />
+    <Compile Include="Ultima\AnimationEdit.cs" />
+    <Compile Include="Ultima\Animations.cs" />
+    <Compile Include="Ultima\Animdata.cs" />
+    <Compile Include="Ultima\Art.cs" />
+    <Compile Include="Ultima\ASCIIFont.cs" />
+    <Compile Include="Ultima\CalibrationInfo.cs" />
+    <Compile Include="Ultima\Client.cs" />
+    <Compile Include="Ultima\ClientHandles.cs" />
+    <Compile Include="Ultima\FileIndex.cs" />
+    <Compile Include="Ultima\Files.cs" />
+    <Compile Include="Ultima\Gumps.cs" />
+    <Compile Include="Ultima\Hues.cs" />
+    <Compile Include="Ultima\Light.cs" />
+    <Compile Include="Ultima\LocationPointer.cs" />
+    <Compile Include="Ultima\Map.cs" />
+    <Compile Include="Ultima\MultiMap.cs" />
+    <Compile Include="Ultima\Multis.cs" />
+    <Compile Include="Ultima\NativeMethods.cs" />
+    <Compile Include="Ultima\ProcessStream.cs" />
+    <Compile Include="Ultima\RadarCol.cs" />
+    <Compile Include="Ultima\SkillGroups.cs" />
+    <Compile Include="Ultima\Skills.cs" />
+    <Compile Include="Ultima\Sound.cs" />
+    <Compile Include="Ultima\SpeechList.cs" />
+    <Compile Include="Ultima\StringEntry.cs" />
+    <Compile Include="Ultima\StringList.cs" />
+    <Compile Include="Ultima\Textures.cs" />
+    <Compile Include="Ultima\TileData.cs" />
+    <Compile Include="Ultima\TileList.cs" />
+    <Compile Include="Ultima\TileMatrix.cs" />
+    <Compile Include="Ultima\TileMatrixPatch.cs" />
+    <Compile Include="Ultima\UnicodeFont.cs" />
+    <Compile Include="Ultima\Verdata.cs" />
+    <Compile Include="Ultima\WindowProcessStream.cs" />
     <Content Include="Core\Actions.cs">
       <SubType>Component</SubType>
     </Content>
