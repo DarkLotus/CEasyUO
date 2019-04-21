@@ -219,8 +219,55 @@ namespace Assistant
 		{
 			return String.Format( "({0}, {1}, {2})", m_X, m_Y, m_Z );
 		}
+        public Direction GetDirectionTo( int x, int y )
+        {
+            int dx = m_X - x;
+            int dy = m_Y - y;
 
-		public override bool Equals( object o )
+            int rx = ( dx - dy ) * 44;
+            int ry = ( dx + dy ) * 44;
+
+            int ax = Math.Abs( rx );
+            int ay = Math.Abs( ry );
+
+            Direction ret;
+
+            if ( ( ( ay >> 1 ) - ax ) >= 0 )
+                ret = ( ry > 0 ) ? Direction.Up : Direction.Down;
+            else if ( ( ( ax >> 1 ) - ay ) >= 0 )
+                ret = ( rx > 0 ) ? Direction.Left : Direction.Right;
+            else if ( rx >= 0 && ry >= 0 )
+                ret = Direction.West;
+            else if ( rx >= 0 && ry < 0 )
+                ret = Direction.South;
+            else if ( rx < 0 && ry < 0 )
+                ret = Direction.East;
+            else
+                ret = Direction.North;
+
+            return ret;
+        }
+
+        public Direction GetDirectionTo( Point2D p )
+        {
+            return GetDirectionTo( p.m_X, p.m_Y );
+        }
+
+        public Direction GetDirectionTo( Point3D p )
+        {
+            return GetDirectionTo( p.m_X, p.m_Y );
+        }
+
+        public Direction GetDirectionTo( IPoint2D p )
+        {
+            if ( p == null )
+                return Direction.North;
+
+            return GetDirectionTo( p.X, p.Y );
+        }
+
+
+        public override bool Equals( object o )
 		{
 			if ( o == null || !(o is IPoint3D) ) return false;
 

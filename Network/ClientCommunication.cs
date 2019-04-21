@@ -31,6 +31,7 @@ namespace Assistant
         private static OnFocusLost _onFocusLost;
 
         private static OnTick _onTick;
+        private static RequestMove _requestMove;
 
         internal static bool InstallHooks( PluginHeader* header )
         {
@@ -40,6 +41,7 @@ namespace Assistant
             _getPlayerPosition = Marshal.GetDelegateForFunctionPointer<OnGetPlayerPosition>( header->GetPlayerPosition );
             _castSpell = Marshal.GetDelegateForFunctionPointer<OnCastSpell>( header->CastSpell );
             _getStaticImage = Marshal.GetDelegateForFunctionPointer<OnGetStaticImage>( header->GetStaticImage );
+            _requestMove = Marshal.GetDelegateForFunctionPointer<RequestMove>( header->RequestMove );
             ClientWindow = header->HWND;
             _onTick = Tick;
             _recv = OnRecv;
@@ -84,6 +86,7 @@ namespace Assistant
             Console.WriteLine( "Closing EasyUO instance" );
             Console.BackgroundColor = last;
             Console.ForegroundColor = lastFore;
+            Engine.m_MainForm.Close();
 
         }
 
@@ -184,7 +187,7 @@ namespace Assistant
         }
 
         public static void CastSpell( int idx ) => _castSpell?.Invoke( idx );
-
+        public static void RequestMove( int dir ) => _requestMove?.Invoke( dir, true );
         public static bool GetPlayerPosition( out int x, out int y, out int z )
             => _getPlayerPosition( out x, out y, out z );
 

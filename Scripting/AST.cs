@@ -294,8 +294,7 @@ namespace CEasyUO
                 timeout = Params[3].GetValueInt();
             while(Utility.Distance(World.Player.Position,new Point2D(x,y)) > tolerance )
             {
-                ClientCommunication.SendToServer( new WalkRequest( World.Player.GetDirectionTo(x,y), World.Player.WalkSequence ) );
-                ClientCommunication.SendToClient( new MobileUpdate( World.Player ) );
+                ClientCommunication.RequestMove( (int)World.Player.Position.GetDirectionTo( new Point2D( x, y ) ) );
                 Thread.Sleep( 400 );
             }
 

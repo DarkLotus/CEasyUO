@@ -40,7 +40,7 @@
     <ApplicationIcon>icons\easyuo2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cuoapi, Version=1.1.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="cuoapi, Version=1.2.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\cuoapi.dll</HintPath>
     </Reference>
