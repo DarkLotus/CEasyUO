@@ -60,7 +60,7 @@ namespace CEasyUO
                 while ( Paused )
                     Thread.Sleep( 50 );
                 Statement();
-                while ( CurrentStatment != null )
+                while ( CurrentStatment != null && Running )
                 {
                     Statement();
                     Thread.Sleep( 50 );
@@ -68,6 +68,8 @@ namespace CEasyUO
                         Thread.Sleep( 50 );
                 }
                 Thread.Sleep( 50 );
+                Console.WriteLine( "Script finished ending..." );
+                Running = false;
             }
 
 

@@ -366,9 +366,23 @@ namespace CEasyUO
                                 else
                                     World.Player?.SendMessage( "Gump not found" );
                                 break;
+                            case "button":
+                                int button = Params[1].GetValueInt();
+                                World.Player.LastGumpResponseAction = new GumpResponseAction( button, new int[] { }, new GumpTextEntry[] { } );
+                                if ( World.Player?.HasGump == true )
+                                    World.Player?.LastGumpResponseAction?.Perform();
+                                else
+                                    World.Player?.SendMessage( "Gump not found" );
+                                break;
                         }
 
                     }
+                    break;
+                case "contextmenu":
+                    uint serial = Utility.EUO2StealthID( Params[1].GetValue().ToString() );
+                    ushort index = (ushort)Params[2].GetValueInt();
+                    ClientCommunication.SendToServer( new ContextMenuRequest( serial ) );
+                    ClientCommunication.SendToServer( new ContextMenuResponse( serial, index ) );
                     break;
             }
             return base.Execute();
