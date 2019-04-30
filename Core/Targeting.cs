@@ -1531,71 +1531,15 @@ namespace Assistant
             {
                 m_HasTarget = false;
 
-                if (m_Intercept)
-                {
-                    args.Block = true;
-                    Timer.DelayedCallbackState(TimeSpan.Zero, m_OneTimeRespCallback, info).Start();
-                    EndIntercept();
-
-                    if (m_PreviousID != 0)
-                    {
-                        m_CurrentID = m_PreviousID;
-                        m_AllowGround = m_PreviousGround;
-                        m_CurFlags = m_PrevFlags;
-
-                        m_PreviousID = 0;
-
-                        ResendTarget();
-                    }
-                }
-                else if (m_FilterCancel.Contains((uint)info.TargID) || info.TargID == LocalTargID)
-                {
-                    args.Block = true;
-                }
-
                 m_FilterCancel.Clear();
                 return;
             }
 
             ClearQueue();
 
-            if (m_Intercept)
-            {
-                if (info.TargID == LocalTargID)
-                {
-                    Timer.DelayedCallbackState(TimeSpan.Zero, m_OneTimeRespCallback, info).Start();
-
-                    m_HasTarget = false;
-                    args.Block = true;
-
-                    if (m_PreviousID != 0)
-                    {
-                        m_CurrentID = m_PreviousID;
-                        m_AllowGround = m_PreviousGround;
-                        m_CurFlags = m_PrevFlags;
-
-                        m_PreviousID = 0;
-
-                        ResendTarget();
-                    }
-
-                    m_FilterCancel.Clear();
-
-                    return;
-                }
-                else
-                {
-                    EndIntercept();
-                }
-            }
-
             m_HasTarget = false;
 
-            if (CheckHealPoisonTarg(m_CurrentID, info.Serial))
-            {
-                ResendTarget();
-                args.Block = true;
-            }
+           
 
             if (info.Serial != World.Player.Serial)
             {
@@ -1623,7 +1567,6 @@ namespace Assistant
 
           
 
-            m_FilterCancel.Clear();
         }
 
         private static void NewTarget(PacketReader p, PacketHandlerEventArgs args)
@@ -1655,41 +1598,9 @@ namespace Assistant
                 m_SpellTargID = m_CurrentID;
 
             m_HasTarget = true;
-            m_ClientTarget = false;
+            m_ClientTarget = true;
+            Console.WriteLine( "Got target" );
 
-if (m_QueueTarget != null && m_QueueTarget())
-            {
-                ClearQueue();
-                args.Block = true;
-            }
-
-            if (args.Block)
-            {
-                if (prevClientTarget)
-                {
-                    m_AllowGround = prevAllowGround;
-                    m_CurrentID = prevID;
-                    m_CurFlags = prevFlags;
-
-                    m_ClientTarget = true;
-
-                    if (!m_Intercept)
-                        CancelClientTarget();
-                }
-            }
-            else
-            {
-                m_ClientTarget = true;
-
-                if (m_Intercept)
-                {
-                    if (m_OnCancel != null)
-                        m_OnCancel();
-                    EndIntercept();
-
-                    m_FilterCancel.Add((uint)prevID);
-                }
-            }
         }
 
         public static void ResendTarget()

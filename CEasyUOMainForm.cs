@@ -19,7 +19,6 @@ namespace CEasyUO
     {
         public CEasyUOMainForm()
         {
-
             InitializeComponent();
             this.Text = $"CEasyUO {Assembly.GetExecutingAssembly().GetName().Version}";
             SetupVarsTimer();
@@ -181,6 +180,7 @@ namespace CEasyUO
             last.Add( "#LOBJECTID", EUOInterpreter.GetVariable<string>( "#LOBJECTID" ) );
             last.Add( "#LOBJECTTYPE", EUOInterpreter.GetVariable<string>( "#LOBJECTTYPE" ) );
             last.Add( "#LTARGETID", EUOInterpreter.GetVariable<string>( "#LTARGETID" ) );
+            last.Add( "#LTARGETTYPE", EUOInterpreter.GetVariable<string>( "#LTARGETTYPE" ) );
             last.Add( "#LTARGETX", EUOInterpreter.GetVariable<string>( "#LTARGETX" ) );
             last.Add( "#LTARGETY", EUOInterpreter.GetVariable<string>( "#LTARGETY" ) );
             last.Add( "#LTARGETZ", EUOInterpreter.GetVariable<string>( "#LTARGETZ" ) );

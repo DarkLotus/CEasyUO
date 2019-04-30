@@ -13,6 +13,7 @@ namespace CEasyUO
         public static uint CurrentID { get; private set; }
         public static byte CurFlags { get; private set; }
         public static TargetInfo LastTarget { get; private set; } = new TargetInfo();
+        public static bool HasTarget { get; private set; }
 
         public static void Initialize()
         {
@@ -34,6 +35,7 @@ namespace CEasyUO
             info.Z = p.ReadInt16();
             info.Gfx = p.ReadUInt16();
             LastTarget = info;
+            HasTarget = false;
         }
         private static void CombatantChange( PacketReader p, PacketHandlerEventArgs args )
         {
@@ -42,13 +44,20 @@ namespace CEasyUO
 
         private static void NewTarget( PacketReader p, PacketHandlerEventArgs args )
         {
-
             AllowGround = p.ReadBoolean(); // allow ground
             CurrentID = p.ReadUInt32(); // target uid
             CurFlags = p.ReadByte(); // flags
 
             LastTarget.TargID = CurrentID;
             LastTarget.Flags = CurFlags;
+            HasTarget = true;
+        }
+
+        internal static void SendTargetLast()
+        {
+            ClientCommunication.SendToServer( new TargetResponse( EUOVars.LastTarget ) ); //Targeting.Target( targ );
+            ClientCommunication.SendToClient( new CancelTarget( EUOVars.CurrentID ) );
+            HasTarget = false;
         }
     }
 }

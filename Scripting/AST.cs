@@ -257,9 +257,15 @@ namespace CEasyUO
         }
         public override bool Execute()
         {
-            var timeout = Params[0].GetValue();
-            while ( !Targeting.HasTarget )
+
+            var timeout = 100;
+            if(Params.Count> 0)
+                timeout = Params[0].GetValueInt();
+            int cnt = 0;
+            while ( !EUOVars.HasTarget && cnt < timeout )
+            {
                 Thread.Sleep( 100 );
+            }
             return base.Execute();
         }
     }
@@ -334,8 +340,7 @@ namespace CEasyUO
                             break;
                         case 22:
                             var targ = Utility.EUO2StealthID( EUOInterpreter.GetVariable<string>( "#ltargetid" ) );
-                            ClientCommunication.SendToServer( new TargetResponse( EUOVars.LastTarget ) ); //Targeting.Target( targ );
-                            ClientCommunication.SendToClient( new CancelTarget( EUOVars.CurrentID ) );
+                            EUOVars.SendTargetLast();
                             break;
                         case 23:
                             Targeting.Target( World.Player.Serial );

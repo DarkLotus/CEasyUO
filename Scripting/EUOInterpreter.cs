@@ -435,6 +435,8 @@ namespace CEasyUO
                         return (T)(object)Utility.UintToEUO( World.Player.LastObjectAsEntity?.GraphicID ?? 0 ).ToString();
                     case "#ltargetid":
                         return (T)(object)Utility.UintToEUO( EUOVars.LastTarget?.Serial ?? 0 ).ToString();
+                    case "#ltargettype":
+                        return (T)(object)Utility.UintToEUO( EUOVars.LastTarget?.Gfx ?? 0 ).ToString();
                     case "#ltargetx":
                         return (T)(object)( EUOVars.LastTarget?.X.ToString() ?? "0" );
                     case "#ltargety":
@@ -488,7 +490,7 @@ namespace CEasyUO
                     case "#sysmsg":
                         return (T)(object)( World.Player.LastSystemMessage ?? "N/A" );
                     case "#targcurs":
-                        return (T)(object)( Targeting.HasTarget );
+                        return (T)(object)( EUOVars.HasTarget );
                 }
             } catch
             {
