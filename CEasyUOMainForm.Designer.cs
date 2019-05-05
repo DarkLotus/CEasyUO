@@ -77,7 +77,7 @@
             this.txtScriptEntry.ShowSelectionMargin = true;
             this.txtScriptEntry.Size = new System.Drawing.Size(683, 578);
             this.txtScriptEntry.TabIndex = 1;
-            this.txtScriptEntry.Text = resources.GetString("txtScriptEntry.Text");
+            this.txtScriptEntry.Text = "";
             // 
             // toolStrip1
             // 

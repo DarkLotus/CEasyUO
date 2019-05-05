@@ -24,6 +24,14 @@ namespace CEasyUO
             SetupVarsTimer();
             btnPause.Enabled = false;
             btnStop.Enabled = false;
+
+            this.txtScriptEntry.Text = @"loop:
+event macro 17 0
+event gump wait
+event gump button 21
+event gump wait
+goto loop
+";
         }
 
         private void SetupVarsTimer()
@@ -60,10 +68,28 @@ namespace CEasyUO
 
         private void UpdateVars()
         {
-            if(Interpreter != null && Interpreter.CurrentStatment != null)
+            btnPause.Checked = false;
+            btnStop.Checked = false;
+
+            if (Interpreter != null)
             {
+                btnPause.Enabled = Interpreter.Running;
+                btnStop.Enabled = Interpreter.Running;
+                btnPlay.Enabled = !Interpreter.Running;
+
+                btnPlay.Checked = Interpreter.Running;
 
             }
+            else
+            {
+                btnPause.Enabled = false;
+                btnStop.Enabled = false;
+                btnPlay.Enabled = true;
+
+                btnPlay.Checked = false;
+            }
+            this.Text = $"CEasyUO {Assembly.GetExecutingAssembly().GetName().Version} - {(m_FilePath ?? "New")}";
+
             try
             {
                 //txtDebug.Text = "CurrentLine: " + Parser?.CurrentLine ?? "0";

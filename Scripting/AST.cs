@@ -16,6 +16,7 @@ namespace CEasyUO
         Running
     }
     public class Stmt {
+        public bool DEBUG = true;
         public int Line = 0;
         /// <summary>
         /// Statements return true if finished, false if run again
@@ -23,6 +24,8 @@ namespace CEasyUO
         /// </summary>
         /// <returns></returns>
         public virtual bool Execute() {
+            if ( DEBUG )
+                Console.WriteLine( $"Executing Statement on Line: {Line} " );
             return true;
         }
     }
@@ -240,11 +243,12 @@ namespace CEasyUO
         }
         public override bool Execute()
         {
+
             var msg = "";
             foreach ( var p in Params )
                 msg += " " + p.GetValue();
 
-            ClientCommunication.SendToServer( new ClientUniMessage( MessageType.Regular, World.Player.SpeechHue, 1, "ENU", new System.Collections.ArrayList(), msg ) );
+            ClientCommunication.SendToServer( new ClientUniMessage( MessageType.Regular, 55, 1, "ENU", null, msg ) );
             return base.Execute();
         }
     }
@@ -319,6 +323,8 @@ namespace CEasyUO
 
         public override bool Execute()
         {
+            if ( DEBUG )
+                Console.WriteLine( $"Executing Event: {EventType} " );
             switch ( EventType )
             {
                 case "macro":
@@ -337,6 +343,7 @@ namespace CEasyUO
                         case 17:
                             var obj = Utility.EUO2StealthID( EUOInterpreter.GetVariable<string>( "#lobjectid" ) );
                             ClientCommunication.SendToServer( new DoubleClick( obj ) );
+
                             break;
                         case 22:
                             var targ = Utility.EUO2StealthID( EUOInterpreter.GetVariable<string>( "#ltargetid" ) );
