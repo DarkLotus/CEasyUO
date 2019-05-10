@@ -1,4 +1,4 @@
-# Installation Instructions.
+﻿# Installation Instructions.
 
 1. Download the latest release bin.zip from the releases page.
 2. Extract the contents into your ClassicUO/data/plugins/ folder
@@ -33,7 +33,7 @@ Responds to the current gump with the specified index
 ### Context Menus
 
 #### event contextmenu {serial} {index}
-Triggers a context menu click at the specified index on the specified object
+Triggers a context menu response at the specified zero based index on the specified serial
 
 
 ## Depreceated commands
