@@ -28,6 +28,12 @@ namespace CEasyUO
                 Console.WriteLine( $"Executing Statement on Line: {Line} " );
             return true;
         }
+
+        internal void Debug(object msg)
+        {
+            if ( DEBUG )
+                Console.WriteLine( $"{msg.ToString()}" );
+        }
     }
 
     abstract class Expr
@@ -99,7 +105,7 @@ namespace CEasyUO
             var ids = Find.GetValue().ToString().Split( new[] { '_' } );
             foreach ( var id in ids )
             {
-                if ( id.Length == 3 )
+                if ( id.Length <= 3 )
                     FindTypes.Add( Utility.EUO2StealthType( id ) );
                 else
                     FindIDs.Add( Utility.EUO2StealthID( id ) );
@@ -124,11 +130,16 @@ namespace CEasyUO
             foreach ( var i in FindTypes )
                 results.AddRange( World.Items.Values.Where( t => t.GraphicID == i ) );
 
+            foreach ( var i in FindTypes )
+                results.AddRange( World.Mobiles.Values.Where( t => t.GraphicID == i ) );
+
+
             if ( ContainerOnly )
                 results = results.Where( t => t.Parent != null ).ToList();
             if ( GroundOnly )
                 results = results.Where( t => t.Parent == null ).ToList();
             var res = results.FirstOrDefault();
+            Debug( $"Found:{results.Count} items" );
 
             EUOInterpreter.Setvariable( "#FINDID", Utility.UintToEUO( res?.Serial ?? 0) );
             EUOInterpreter.Setvariable( "#FINDTYPE", Utility.UintToEUO( res?.GraphicID ?? 0) );
@@ -391,8 +402,8 @@ namespace CEasyUO
                     }
                     break;
                 case "contextmenu":
-                    uint serial = Utility.EUO2StealthID( Params[1].GetValue().ToString() );
-                    ushort index = (ushort)Params[2].GetValueInt();
+                    uint serial = Utility.EUO2StealthID( Params[0].GetValue().ToString() );
+                    ushort index = (ushort)Params[1].GetValueInt();
                     ClientCommunication.SendToServer( new ContextMenuRequest( serial ) );
                     ClientCommunication.SendToServer( new ContextMenuResponse( serial, index ) );
                     break;
@@ -577,11 +588,14 @@ namespace CEasyUO
             if ( ident is Ident i )
             {
                 varName = i.value.ToLowerInvariant();
+                Debug( "Executing Assign for " + varName );
+
                 EUOInterpreter.Setvariable( varName, value.GetValue() );
             }
             else
             {
                 varName = ident.GetValue().ToString().ToLowerInvariant();
+                Debug( "Executing Assign for " + varName );
                 EUOInterpreter.Setvariable( varName, value );
             }
             return base.Execute();

@@ -515,6 +515,7 @@ namespace CEasyUO
 
         public static void Setvariable(string key, object value )
         {
+            Console.WriteLine( $"Set: {key} : {value} " );
             key = key.ToLowerInvariant();
             if ( Variables.ContainsKey( key ) )
                 Variables[key] = value;
@@ -529,6 +530,15 @@ namespace CEasyUO
                         break;
                     case "#ltargetid":
                         EUOVars.LastTarget.Serial = Utility.EUO2StealthID( value.ToString() );
+                        break;
+                    case "#ltargettype":
+                        EUOVars.LastTarget.Gfx = Utility.EUO2StealthType( value.ToString() );
+                        break;
+                    case "#ltargetkind":
+                        EUOVars.LastTarget.Type = byte.Parse( value.ToString() );
+                        break;
+                    case "#ltargettile":
+                        EUOVars.LastTarget.Gfx = ushort.Parse( value.ToString() );
                         break;
                 }
         }
