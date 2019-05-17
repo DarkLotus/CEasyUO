@@ -164,7 +164,7 @@ namespace Assistant
                 World.Player.Position = new Point3D( x, y, z );
         }
 
-        private static bool OnRecv( byte[] data, int length )
+        private static bool OnRecv( ref byte[] data, ref int length )
         {
             fixed ( byte* ptr = data )
             {
@@ -175,8 +175,9 @@ namespace Assistant
             }
         }
 
-        private static bool OnSend( byte[] data, int length )
+        private static bool OnSend( ref byte[] data, ref int length )
         {
+            Console.WriteLine( "Send: " + length );
             fixed ( byte* ptr = data )
             {
                 PacketReader p = new PacketReader( ptr, length, PacketsTable.GetPacketLength( data[0] ) < 0 );
@@ -186,6 +187,7 @@ namespace Assistant
             }
         }
 
+       
         public static void CastSpell( int idx ) => _castSpell?.Invoke( idx );
         public static void RequestMove( int dir ) => _requestMove?.Invoke( dir, true );
         public static bool GetPlayerPosition( out int x, out int y, out int z )
@@ -193,14 +195,17 @@ namespace Assistant
 
         internal static void SendToServer( Packet p )
         {
-            var len = p.Length;
-            _sendToServer?.Invoke( p.Compile(), (int)len );
+            var len = (int)p.Length;
+            var pack = p.Compile();
+            _sendToServer?.Invoke( ref pack, ref len );
         }
 
         internal static void SendToClient( Packet p )
         {
-            var len = p.Length;
-            _sendToClient?.Invoke( p.Compile(), (int)len );
+            var len = (int)p.Length;
+            var pack = p.Compile();
+
+            _sendToClient?.Invoke(ref pack, ref len );
         }
     }
 
