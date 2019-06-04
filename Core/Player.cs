@@ -666,25 +666,7 @@ namespace Assistant
       
         private void AutoOpenDoors()
         {
-            if (Body != 0x03DB &&
-                !IsGhost &&
-                ((int)(Direction & Direction.Mask)) % 2 == 0 &&
-                Config.GetBool("AutoOpenDoors"))
-            {
-                int x = Position.X, y = Position.Y, z = Position.Z;
-
-                /* Check if one more tile in the direction we just moved is a door */
-                Utility.Offset(Direction, ref x, ref y);
-
-                foreach (Item i in World.Items.Values)
-                {
-                    if (i.IsDoor && i.Position.X == x && i.Position.Y == y && i.Position.Z - 15 <= z && i.Position.Z + 15 >= z)
-                    {
-                        ClientCommunication.SendToServer(new OpenDoorMacro());
-                        break;
-                    }
-                }
-            }
+           
         }
 
 
