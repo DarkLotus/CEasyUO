@@ -11,6 +11,8 @@
 ```
 
 ## This project is not yet complete or in a usable state for end users.
+
+# Really this will not work for you yet, This code is here simply incase someone wants to take over the project.
 Script parsing is mostly all done, though a few bugs are probably still lurking when dealing with lots of nested if/else and subs.
 A few functions are hooked up, ie Event macro 17, 22, 13, 15
 Most variables are hooked up.
